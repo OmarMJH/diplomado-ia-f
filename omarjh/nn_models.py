@@ -10,8 +10,7 @@ from keras.src.models import Model
 
 @attrs.define
 class NNModels:
-    """
-    Clase para definir la arquitectura de los modelos de deep learning.
+    """Clase para definir la arquitectura de los modelos de deep learning.
 
     Args:
         n_classes (int): Número de clases para la capa de salida.
@@ -114,6 +113,30 @@ class NNModels:
 
         return model
 
+    def alex(self):
+        model = keras.models.Sequential()
+        model.add(Conv2D(filters=96, kernel_size=(3, 3), strides=(4, 4), input_shape=(
+            self.img_weight, self.image_width, self.n_channels), activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+        model.add(Conv2D(256, (5, 5), padding='same', activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+        model.add(Conv2D(384, (3, 3), padding='same', activation='relu'))
+        model.add(Conv2D(384, (3, 3), padding='same', activation='relu'))
+        model.add(Conv2D(256, (3, 3), padding='same', activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+        model.add(Flatten())
+        model.add(Dense(4096, activation='relu'))
+        model.add(Dropout(0.4))
+        model.add(Dense(4096, activation='relu'))
+        model.add(Dropout(0.4))
+        model.add(Dense(self.n_classes, activation='softmax'))
+
+        # model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
+
+        # model.summary()
+        return model
+
     def AlexNet_model(self):
         """Modelo AlexNet, definido con un input en base a los parametros de dimesionalidad de la
         clase y una salida con n_classes como categorias de salida.
@@ -126,11 +149,13 @@ class NNModels:
             keras.layers.Conv2D(filters=96, kernel_size=(11, 11), strides=(4, 4), activation='relu',
                                 input_shape=(self.img_weight, self.image_width, self.n_channels)),
             keras.layers.BatchNormalization(),
-            keras.layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2)),
+            keras.layers.MaxPool2D(pool_size=(
+                3, 3), strides=(2, 2), padding='same'),
             keras.layers.Conv2D(filters=256, kernel_size=(5, 5), strides=(
                 1, 1), activation='relu', padding="same"),
             keras.layers.BatchNormalization(),
-            keras.layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2)),
+            keras.layers.MaxPool2D(pool_size=(
+                3, 3), strides=(2, 2), padding='same'),
             keras.layers.Conv2D(filters=384, kernel_size=(3, 3), strides=(
                 1, 1), activation='relu', padding="same"),
             keras.layers.BatchNormalization(),
@@ -140,7 +165,8 @@ class NNModels:
             keras.layers.Conv2D(filters=256, kernel_size=(3, 3), strides=(
                 1, 1), activation='relu', padding="same"),
             keras.layers.BatchNormalization(),
-            keras.layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2)),
+            keras.layers.MaxPool2D(pool_size=(
+                3, 3), strides=(2, 2), padding='same'),
             keras.layers.Flatten(),
             keras.layers.Dense(4096, activation='relu'),
             keras.layers.Dropout(0.5),
